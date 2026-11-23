@@ -1,0 +1,1332 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <meta name="theme-color" content="#ffffff">
+  <meta name="color-scheme" content="light">
+  <meta name="description" content="RwFrame / mxtherfxcker — software engineer focused on C++, Windows Internals, and Cybersecurity Research.">
+
+  <meta property="og:type" content="website">
+  <meta property="og:title" content="RwFrame / mxtherfxcker">
+  <meta property="og:description" content="Software engineer focused on C++, Windows Internals, and Cybersecurity Research.">
+  <meta name="twitter:card" content="summary">
+
+  <link rel="icon" type="image/svg+xml" href="data:image/svg+xml;base64,PHN2ZyB4bWxucz0iaHR0cDovL3d3dy53My5vcmcvMjAwMC9zdmciIHZpZXdCb3g9IjAgMCA2NCA2NCI+PHJlY3Qgd2lkdGg9IjY0IiBoZWlnaHQ9IjY0IiBmaWxsPSIjMDAwMDAwIi8+PHRleHQgeD0iMzIiIHk9IjQ1IiBmb250LWZhbWlseT0ibW9ub3NwYWNlIiBmb250LXNpemU9IjM0IiBmb250LXdlaWdodD0iYm9sZCIgZmlsbD0iI2ZmZmZmZiIgdGV4dC1hbmNob3I9Im1pZGRsZSI+UjwvdGV4dD48L3N2Zz4=">
+
+  <title>RwFrame / mxtherfxcker</title>
+
+  <style>
+    :root {
+      --bg: #ffffff;
+      --fg: #000000;
+      --muted: #666666;
+      --accent: #db7093;
+      --spacing: clamp(18px, 3vw, 28px);
+      --border: 1px solid var(--fg);
+      --transition: 0.2s ease;
+    }
+
+    * {
+      box-sizing: border-box;
+      -webkit-user-select: none;
+      user-select: none;
+    }
+
+    html {
+      scroll-behavior: smooth;
+      overflow-x: hidden;
+      scroll-padding-top: 20px;
+      -webkit-text-size-adjust: 100%;
+      text-size-adjust: 100%;
+    }
+
+    body {
+      margin: 0;
+      overflow-x: hidden;
+      background: var(--bg);
+      color: var(--fg);
+      font-family: "Segoe UI", Arial, sans-serif;
+      font-variant-numeric: tabular-nums lining-nums;
+      font-kerning: auto;
+      font-size: 15px;
+      line-height: 1.4;
+      font-weight: 400;
+      -webkit-font-smoothing: auto;
+      text-rendering: auto;
+    }
+
+    .cursor {
+      position: fixed;
+      width: 8px;
+      height: 8px;
+      border-radius: 50%;
+      background: var(--fg);
+      pointer-events: none;
+      z-index: 9999;
+      transition: transform 0.18s ease-out, opacity 0.2s ease, background-color 0.18s ease;
+      opacity: 0;
+      will-change: transform, opacity;
+    }
+
+    .cursor.active {
+      opacity: 1;
+    }
+
+    .cursor.hover {
+      transform: scale(2);
+      background: var(--accent);
+    }
+
+    a {
+      color: inherit;
+      text-decoration: none;
+      transition: color var(--transition);
+      will-change: color;
+      cursor: pointer;
+    }
+
+    button {
+      cursor: pointer;
+    }
+
+    @media (pointer: fine) and (prefers-reduced-motion: no-preference) {
+      body,
+      a,
+      button {
+        cursor: none;
+      }
+    }
+
+    a.js-hover,
+    a:focus-visible {
+      color: var(--accent);
+    }
+
+    a:focus-visible {
+      outline: 2px solid var(--fg);
+      outline-offset: 3px;
+    }
+
+    a:active {
+      transform: scale(0.98);
+    }
+
+    .site {
+      max-width: 900px;
+      margin: 0 auto;
+      padding: var(--spacing);
+    }
+
+    .topbar {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      gap: 20px;
+      padding: 20px 0 40px;
+      font-weight: 600;
+      font-size: 16px;
+    }
+
+    .nav {
+      display: flex;
+      gap: 20px;
+      flex-wrap: wrap;
+    }
+
+    main {
+      text-align: center;
+      padding-bottom: 40px;
+    }
+
+    .hero {
+      padding: 40px 0 40px;
+    }
+
+    .hero-title {
+      margin: 0 0 12px;
+      font-size: clamp(44px, 10vw, 88px);
+      line-height: 0.95;
+      font-weight: bold;
+      letter-spacing: -0.03em;
+    }
+
+    .hero-intro {
+      max-width: 680px;
+      margin: 0 auto;
+      font-size: 16px;
+      line-height: 1.5;
+    }
+
+    section {
+      padding: 40px 0;
+      border-top: var(--border);
+    }
+
+    #stack,
+    #posts,
+    #links {
+      border-top: none;
+    }
+
+    #posts.hidden {
+      display: none;
+    }
+
+    .nav a[href="#posts"].hidden {
+      display: none;
+    }
+
+    .section-title {
+      margin: 0 0 40px;
+      font-size: clamp(28px, 5vw, 42px);
+      font-weight: bold;
+      letter-spacing: -0.02em;
+    }
+
+    .about-text {
+      max-width: 720px;
+      margin: 0 auto 16px;
+      font-size: 16px;
+      line-height: 1.55;
+      text-align: left;
+    }
+
+    .about-text:last-child {
+      margin-bottom: 0;
+    }
+
+    .stack-simple {
+      max-width: 680px;
+      margin: 0 auto;
+      text-align: left;
+    }
+
+    .stack-line {
+      display: flex;
+      gap: 20px;
+      padding: 10px 0;
+      border-bottom: var(--border);
+    }
+
+    .stack-line:first-child {
+      border-top: var(--border);
+    }
+
+    .stack-key {
+      min-width: 100px;
+      flex-shrink: 0;
+      color: var(--muted);
+      font-size: 13px;
+      font-weight: bold;
+    }
+
+    .stack-value {
+      font-size: 13px;
+      line-height: 1.5;
+    }
+
+    .posts {
+      max-width: 760px;
+      margin: 0 auto;
+      border: var(--border);
+    }
+
+    .post {
+      display: grid;
+      grid-template-columns: 1fr auto auto;
+      gap: 20px;
+      align-items: center;
+      padding: 18px 20px;
+      border-bottom: var(--border);
+      text-align: left;
+      transition: background-color var(--transition), padding-left var(--transition);
+      will-change: background-color, padding-left;
+    }
+
+    .post:last-child {
+      border-bottom: 0;
+    }
+
+    .post.js-hover,
+    .post:focus-visible {
+      background: #f9f9f9;
+      padding-left: 26px;
+    }
+
+    .post:active {
+      transform: translateX(2px);
+    }
+
+    .post-title {
+      margin: 0 0 4px;
+      font-size: 15px;
+      font-weight: bold;
+    }
+
+    .post-desc {
+      margin: 0;
+      font-size: 13px;
+      color: var(--muted);
+    }
+
+    .post-date {
+      font-size: 12px;
+      color: var(--muted);
+      white-space: nowrap;
+    }
+
+    .post-arrow {
+      font-size: 16px;
+      color: var(--muted);
+      transition: transform var(--transition), color var(--transition);
+      will-change: transform, color;
+    }
+
+    .post.js-hover .post-arrow,
+    .post:focus-visible .post-arrow {
+      transform: translateX(4px);
+      color: var(--fg);
+    }
+
+    .post.hidden {
+      display: none;
+    }
+
+    .see-more-btn {
+      display: block;
+      width: 100%;
+      padding: 18px 20px;
+      background: var(--bg);
+      border: none;
+      border-top: var(--border);
+      font-family: inherit;
+      font-size: 14px;
+      font-weight: bold;
+      color: var(--fg);
+      transition: background-color var(--transition), padding-left var(--transition);
+      text-align: left;
+    }
+
+    .see-more-btn.js-hover,
+    .see-more-btn:focus-visible {
+      background: #f9f9f9;
+      padding-left: 26px;
+    }
+
+    .see-more-btn:focus-visible {
+      outline: 2px solid var(--fg);
+      outline-offset: -2px;
+    }
+
+    .see-more-btn.hidden {
+      display: none;
+    }
+
+    .links {
+      display: grid;
+      grid-template-columns: repeat(2, 1fr);
+      gap: 1px;
+      max-width: 660px;
+      margin: 0 auto;
+      border: var(--border);
+      background: var(--fg);
+    }
+
+    .link {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      gap: 20px;
+      background: var(--bg);
+      padding: 18px 20px;
+      transition: background-color var(--transition), padding-left var(--transition);
+      will-change: background-color, padding-left;
+    }
+
+    .link:nth-child(2n+1):last-child {
+      grid-column: 1 / -1;
+    }
+
+    .link.js-hover,
+    .link:focus-visible {
+      background: #f9f9f9;
+      padding-left: 26px;
+    }
+
+    .link:active {
+      transform: translateX(2px);
+    }
+
+    .link-content {
+      display: flex;
+      flex-direction: column;
+      gap: 4px;
+      min-width: 0;
+      text-align: left;
+    }
+
+    .link-name {
+      font-size: 14px;
+      font-weight: bold;
+      line-height: 1.2;
+    }
+
+    .link-handle {
+      font-size: 12px;
+      color: var(--muted);
+      line-height: 1.2;
+      padding-left: 0.65em;
+      overflow: hidden;
+      text-overflow: ellipsis;
+      white-space: nowrap;
+    }
+
+    .link-icon {
+      font-size: 16px;
+      color: var(--muted);
+      transition: transform var(--transition), color var(--transition);
+      will-change: transform, color;
+    }
+
+    .link.js-hover .link-icon,
+    .link:focus-visible .link-icon {
+      transform: translate(3px, -3px);
+      color: var(--fg);
+    }
+
+    .footer {
+      padding: 40px 0 20px;
+      border-top: var(--border);
+      font-size: 13px;
+      color: var(--muted);
+    }
+
+    .footer-name {
+      color: var(--fg);
+      font-weight: bold;
+    }
+
+    @media (max-width: 720px) {
+      .topbar {
+        flex-direction: column;
+        align-items: flex-start;
+        gap: 12px;
+      }
+
+      .nav {
+        gap: 16px;
+        font-size: 14px;
+      }
+
+      .hero {
+        padding: 40px 0 40px;
+      }
+
+      .stack-line {
+        flex-direction: column;
+        gap: 6px;
+      }
+
+      .stack-key {
+        min-width: auto;
+      }
+
+      .links {
+        grid-template-columns: 1fr;
+      }
+
+      .post {
+        grid-template-columns: 1fr auto;
+        gap: 12px;
+      }
+
+      .post-date {
+        display: none;
+      }
+    }
+
+    @media (max-width: 480px) {
+      body {
+        font-size: 14px;
+      }
+
+      .topbar {
+        padding: 16px 0 32px;
+        font-size: 14px;
+      }
+
+      .hero {
+        padding: 32px 0 32px;
+      }
+
+      .section-title {
+        margin-bottom: 32px;
+      }
+
+      .link {
+        padding: 18px;
+      }
+    }
+
+    @media (prefers-reduced-motion: reduce) {
+      html {
+        scroll-behavior: auto;
+      }
+
+      *,
+      *::before,
+      *::after {
+        transition-duration: 0.01ms !important;
+        animation-duration: 0.01ms !important;
+        animation-iteration-count: 1 !important;
+      }
+
+      body {
+        cursor: auto;
+      }
+
+      .cursor {
+        display: none;
+      }
+    }
+
+    @media (pointer: coarse) {
+      body {
+        cursor: auto;
+      }
+
+      .cursor {
+        display: none;
+      }
+    }
+
+    /* Refined visual layer */
+    :root {
+      --accent: #4f46e5;
+      --line: rgba(0, 0, 0, 0.12);
+      --soft: #f5f5f3;
+    }
+
+    body {
+      background:
+        linear-gradient(rgba(0, 0, 0, 0.025) 1px, transparent 1px),
+        linear-gradient(90deg, rgba(0, 0, 0, 0.025) 1px, transparent 1px),
+        #fbfbf9;
+      background-size: 32px 32px;
+    }
+
+    .cursor {
+      width: 10px;
+      height: 10px;
+      mix-blend-mode: difference;
+      background: #fff;
+    }
+
+    .cursor.hover {
+      width: 12px;
+      height: 12px;
+      background: #fff;
+    }
+
+    .site {
+      max-width: 1040px;
+      padding: 0 clamp(20px, 4vw, 48px) 32px;
+    }
+
+    .topbar {
+      position: relative;
+      z-index: 20;
+      margin: 0 calc(clamp(20px, 4vw, 48px) * -1);
+      padding: 20px clamp(20px, 4vw, 48px);
+      border-bottom: 1px solid var(--line);
+      background: rgba(251, 251, 249, 0.86);
+      backdrop-filter: blur(14px);
+      -webkit-backdrop-filter: blur(14px);
+    }
+
+    .nav {
+      margin-left: auto;
+      gap: 8px;
+    }
+
+    .nav a {
+      padding: 7px 9px;
+      border: 1px solid transparent;
+      border-radius: 999px;
+      font-size: 13px;
+    }
+
+    .nav a:hover,
+    .nav a:focus-visible,
+    .nav a.js-hover {
+      border-color: var(--line);
+      background: #fff;
+      color: var(--fg);
+    }
+
+    main {
+      text-align: left;
+    }
+
+    .hero {
+      position: relative;
+      min-height: 520px;
+      display: flex;
+      flex-direction: column;
+      justify-content: center;
+      align-items: flex-start;
+      padding: 84px 0 72px;
+      border-bottom: 1px solid var(--line);
+      overflow: hidden;
+    }
+
+    .hero-title,
+    .hero-intro {
+      width: 100%;
+      margin-left: 0;
+      margin-right: 0;
+      text-align: left;
+    }
+
+    .hero::after {
+      content: "RW";
+      position: absolute;
+      right: 0;
+      bottom: 0;
+      font-family: Arial, sans-serif;
+      font-size: clamp(120px, 18vw, 220px);
+      line-height: 1;
+      font-weight: 900;
+      letter-spacing: 0;
+      color: rgba(0, 0, 0, 0.035);
+      pointer-events: none;
+    }
+
+    .hero-title {
+      position: relative;
+      z-index: 2;
+      max-width: 780px;
+      margin: 0 0 34px;
+      font-family: Arial, "Helvetica Neue", sans-serif;
+      font-size: clamp(76px, 12vw, 150px);
+      line-height: 0.78;
+      letter-spacing: 0.015em;
+    }
+
+    .hero-intro {
+      position: relative;
+      z-index: 2;
+      max-width: 610px;
+      margin: 0;
+      padding: 0;
+      border: 0;
+      color: #3f3f46;
+      font-size: clamp(15px, 2vw, 18px);
+      line-height: 1.7;
+    }
+
+    .hero-intro::before {
+      content: "";
+      position: absolute;
+      left: -18px;
+      top: 0;
+      bottom: 0;
+      width: 2px;
+      background: var(--accent);
+    }
+
+    section {
+      padding: 88px 0;
+      border-top: 0;
+    }
+
+    #about,
+    #stack,
+    #posts,
+    #links {
+      border-top: 1px solid var(--line);
+      scroll-margin-top: 20px;
+    }
+
+    #about {
+      display: grid;
+      grid-template-columns: 0.42fr 1fr;
+      column-gap: 52px;
+      border-top: 0;
+    }
+
+    #about .section-title {
+      grid-row: 1 / 4;
+      position: sticky;
+      top: 96px;
+      align-self: start;
+      margin: 0;
+    }
+
+    .section-title {
+      margin: 0 0 34px;
+      font-family: Arial, "Helvetica Neue", sans-serif;
+      font-size: clamp(36px, 6vw, 64px);
+      line-height: 0.95;
+      letter-spacing: -0.055em;
+    }
+
+    #about .about-text {
+      max-width: none;
+      margin: 0 0 18px;
+      padding: 22px 24px;
+    }
+
+    #about .about-text,
+    .stack-line,
+    .post,
+    .see-more-btn,
+    .link {
+      border: 1px solid rgba(255, 255, 255, 0.88);
+      border-radius: 14px;
+      background: linear-gradient(140deg, rgba(255, 255, 255, 0.78), rgba(236, 243, 255, 0.56) 48%, rgba(255, 249, 253, 0.64));
+      box-shadow:
+        0 12px 30px rgba(31, 41, 55, 0.075),
+        0 2px 6px rgba(58, 73, 109, 0.035),
+        inset 0 1px 0 rgba(255, 255, 255, 0.95),
+        inset 0 -1px 0 rgba(148, 163, 184, 0.16);
+      -webkit-backdrop-filter: blur(18px) saturate(1.25);
+      backdrop-filter: blur(18px) saturate(1.25);
+    }
+
+    #stack {
+      display: grid;
+      grid-template-columns: 0.42fr 1fr;
+      column-gap: 52px;
+    }
+
+    #stack .section-title {
+      margin: 0;
+    }
+
+    .stack-simple {
+      max-width: none;
+      display: grid;
+      grid-template-columns: repeat(2, minmax(0, 1fr));
+      gap: 12px;
+    }
+
+    .stack-line {
+      min-height: 118px;
+      flex-direction: column;
+      gap: 10px;
+      justify-content: space-between;
+      padding: 18px;
+    }
+
+    .stack-line:first-child {
+      border-top: 1px solid rgba(255, 255, 255, 0.88);
+    }
+
+    .stack-key {
+      min-width: 0;
+      color: var(--accent);
+      font-size: 11px;
+      letter-spacing: 0.08em;
+      text-transform: uppercase;
+    }
+
+    .stack-value {
+      font-size: 14px;
+      line-height: 1.55;
+    }
+
+    #posts .section-title,
+    #links .section-title {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+    }
+
+    #posts .section-title::after {
+      content: "01";
+      display: grid;
+      width: 44px;
+      height: 44px;
+      place-items: center;
+      border: 1px solid var(--line);
+      border-radius: 50%;
+      font-family: ui-monospace, monospace;
+      font-size: 11px;
+      letter-spacing: 0;
+      color: var(--muted);
+    }
+
+    .posts {
+      max-width: none;
+      display: grid;
+      gap: 12px;
+    }
+
+    .post {
+      grid-template-columns: minmax(0, 1fr) 110px 24px;
+      min-height: 92px;
+      padding: 20px 22px;
+      text-align: left;
+      transition: background var(--transition), box-shadow var(--transition), padding-left var(--transition), transform var(--transition);
+    }
+
+    .post.js-hover,
+    .post:focus-visible {
+      background: linear-gradient(135deg, rgba(255, 255, 255, 0.96), rgba(255, 255, 255, 0.68));
+      box-shadow: 0 14px 34px rgba(31, 41, 55, 0.09), inset 0 1px 0 rgba(255, 255, 255, 0.98);
+      padding-left: 28px;
+    }
+
+    .post-title {
+      font-size: 16px;
+    }
+
+    .post-desc {
+      max-width: 520px;
+    }
+
+    .see-more-btn {
+      text-align: center;
+    }
+
+    .see-more-btn.js-hover,
+    .see-more-btn:focus-visible {
+      background: linear-gradient(135deg, rgba(255, 255, 255, 0.96), rgba(255, 255, 255, 0.68));
+      box-shadow: 0 14px 34px rgba(31, 41, 55, 0.09), inset 0 1px 0 rgba(255, 255, 255, 0.98);
+      padding-left: 20px;
+    }
+
+    .links {
+      max-width: none;
+      grid-template-columns: repeat(6, 1fr);
+      gap: 12px;
+      border: 0;
+      background: transparent;
+    }
+
+    .link {
+      grid-column: span 3;
+      min-height: 104px;
+      transition: background var(--transition), box-shadow var(--transition), padding-left var(--transition), transform var(--transition);
+    }
+
+    .link:nth-child(5) {
+      grid-column: 2 / span 4;
+    }
+
+    .link.js-hover,
+    .link:focus-visible {
+      background: linear-gradient(135deg, rgba(255, 255, 255, 0.96), rgba(255, 255, 255, 0.68));
+      padding-left: 20px;
+      box-shadow: 0 14px 32px rgba(31, 41, 55, 0.09), inset 0 1px 0 rgba(255, 255, 255, 0.98);
+      transform: translateY(-2px);
+    }
+
+    .link-name {
+      font-size: 15px;
+    }
+
+    .link-handle {
+      padding-left: 0;
+      color: #71717a;
+    }
+
+    .footer {
+      display: flex;
+      justify-content: space-between;
+      padding: 28px 0 8px;
+      border-top: 1px solid var(--line);
+    }
+
+    @media (max-width: 720px) {
+      .topbar {
+        flex-direction: row;
+        align-items: center;
+        gap: 12px;
+      }
+
+      .nav {
+        justify-content: flex-end;
+      }
+
+      .nav a {
+        font-size: 12px;
+      }
+
+      .hero {
+        min-height: 470px;
+        padding: 72px 0 56px;
+      }
+
+      .hero-title {
+        font-size: clamp(58px, 18vw, 110px);
+      }
+
+      .hero::after {
+        display: none;
+      }
+
+      section {
+        padding: 64px 0;
+      }
+
+      #about,
+      #stack {
+        display: block;
+      }
+
+      #about .section-title,
+      #stack .section-title {
+        position: static;
+        margin: 0 0 28px;
+      }
+
+      .stack-simple {
+        grid-template-columns: repeat(2, minmax(0, 1fr));
+      }
+
+      .links {
+        grid-template-columns: repeat(2, minmax(0, 1fr));
+      }
+
+      .link,
+      .link:nth-child(5) {
+        grid-column: span 1;
+      }
+
+      .link:nth-child(5) {
+        grid-column: 1 / -1;
+      }
+    }
+
+    @media (max-width: 480px) {
+      .site {
+        max-width: 100%;
+        overflow-x: hidden;
+      }
+
+      .topbar {
+        align-items: flex-start;
+      }
+
+      .nav {
+        max-width: 210px;
+        gap: 2px;
+      }
+
+      .nav a {
+        padding: 5px 6px;
+      }
+
+      .hero-title {
+        font-size: clamp(32px, 16.5vw, 58px);
+        line-height: 0.86;
+      }
+
+      .hero-intro {
+        line-height: 1.6;
+      }
+
+      .section-title {
+        font-size: 42px;
+      }
+
+      .stack-simple,
+      .links {
+        grid-template-columns: 1fr;
+      }
+
+      .stack-line,
+      .link,
+      .link:nth-child(5) {
+        grid-column: 1;
+      }
+
+      .post {
+        grid-template-columns: minmax(0, 1fr) 20px;
+        gap: 8px;
+      }
+
+      .post-date {
+        display: none;
+      }
+
+      #posts .section-title,
+      #links .section-title {
+        align-items: flex-end;
+      }
+    }
+  </style>
+</head>
+<body>
+  <div class="cursor" aria-hidden="true"></div>
+
+  <div class="site">
+    <header class="topbar">
+      <nav class="nav" aria-label="Primary">
+        <a href="#about">About</a>
+        <a href="#stack">Stack</a>
+        <a href="#posts">Posts</a>
+        <a href="#links">Links</a>
+      </nav>
+    </header>
+
+    <main>
+      <section class="hero">
+        <h1 class="hero-title">RwFrame</h1>
+        <p class="hero-intro">
+          Middle software engineer working with C++ on Windows Internals and Cybersecurity Research.
+        </p>
+      </section>
+
+      <section id="about">
+        <h2 class="section-title">About</h2>
+        <p class="about-text">
+          I'm a middle software engineer from Russia, now based in Luštica Bay, Montenegro. I've been programming actively since 2023, working primarily with C++.
+        </p>
+        <p class="about-text">
+          My focus areas are Windows Internals and Cybersecurity Research. I also work with classic C. Most of my projects stay local, so this site is just a simple record of what I do and what I'm interested in.
+        </p>
+        <p class="about-text">
+          Outside of coding, I enjoy horror and thriller movies, games from studios like Rockstar and Valve, and listening to music.
+        </p>
+      </section>
+
+      <section id="stack">
+        <h2 class="section-title">Technology Stack</h2>
+        <div class="stack-simple">
+          <div class="stack-line">
+            <span class="stack-key">Languages</span>
+            <span class="stack-value">C++, C</span>
+          </div>
+          <div class="stack-line">
+            <span class="stack-key">OS</span>
+            <span class="stack-value">Windows</span>
+          </div>
+          <div class="stack-line">
+            <span class="stack-key">Editors</span>
+            <span class="stack-value">Kiro, VS Code, Visual Studio 2017-2026</span>
+          </div>
+          <div class="stack-line">
+            <span class="stack-key">Tools</span>
+            <span class="stack-value">Git, CMake</span>
+          </div>
+        </div>
+      </section>
+
+      <section id="posts">
+        <h2 class="section-title">Posts</h2>
+        <div class="posts" id="posts-container"></div>
+      </section>
+
+      <section id="links">
+        <h2 class="section-title">Links</h2>
+        <div class="links">
+          <a class="link" href="https://github.com/mxtherfxcker" target="_blank" rel="noopener noreferrer">
+            <div class="link-content">
+              <div class="link-name">GitHub</div>
+              <div class="link-handle">mxtherfxcker</div>
+            </div>
+            <div class="link-icon" aria-hidden="true">↗</div>
+          </a>
+          <a class="link" href="http://www.youtube.com/@rwframe" target="_blank" rel="noopener noreferrer">
+            <div class="link-content">
+              <div class="link-name">YouTube</div>
+              <div class="link-handle">@rwframe</div>
+            </div>
+            <div class="link-icon" aria-hidden="true">↗</div>
+          </a>
+          <a class="link" href="https://discord.com/users/1039474695222865950/" target="_blank" rel="noopener noreferrer">
+            <div class="link-content">
+              <div class="link-name">Discord</div>
+              <div class="link-handle">mxtherfxcker</div>
+            </div>
+            <div class="link-icon" aria-hidden="true">↗</div>
+          </a>
+          <a class="link" href="https://t.me/rwframe" target="_blank" rel="noopener noreferrer">
+            <div class="link-content">
+              <div class="link-name">Telegram</div>
+              <div class="link-handle">@rwframe</div>
+            </div>
+            <div class="link-icon" aria-hidden="true">↗</div>
+          </a>
+          <a class="link" href="mailto:rwframe@hotmail.com">
+            <div class="link-content">
+              <div class="link-name">Email</div>
+              <div class="link-handle">rwframe@hotmail.com</div>
+            </div>
+            <div class="link-icon" aria-hidden="true">↗</div>
+          </a>
+        </div>
+      </section>
+    </main>
+
+    <footer class="footer">
+      <div><span class="footer-name">RwFrame</span> · <span id="year"></span></div>
+    </footer>
+  </div>
+
+  <script>
+    "use strict";
+
+    var yearEl = document.getElementById("year");
+    if (yearEl) {
+      yearEl.textContent = new Date().getFullYear();
+    }
+
+    document.querySelectorAll('a[href="#"]').forEach(function (el) {
+      el.addEventListener("click", function (event) {
+        event.preventDefault();
+      });
+    });
+
+    var prefersCoarsePointer = window.matchMedia("(pointer: coarse)").matches;
+    var prefersReducedMotion = window.matchMedia("(prefers-reduced-motion: reduce)").matches;
+
+    if (!prefersCoarsePointer && !prefersReducedMotion) {
+      (function () {
+        var cursor = document.querySelector(".cursor");
+        if (!cursor) return;
+
+        var mouseX = 0, mouseY = 0, cursorX = 0, cursorY = 0;
+        var animationFrame = null;
+
+        document.addEventListener("mousemove", function (e) {
+          mouseX = e.clientX;
+          mouseY = e.clientY;
+          if (!cursor.classList.contains("active")) {
+            cursor.classList.add("active");
+            cursorX = mouseX;
+            cursorY = mouseY;
+            cursor.style.left = cursorX + "px";
+            cursor.style.top = cursorY + "px";
+          }
+          if (animationFrame === null) {
+            animationFrame = requestAnimationFrame(animateCursor);
+          }
+        }, { passive: true });
+
+        document.addEventListener("mouseleave", function () {
+          cursor.classList.remove("active");
+          if (animationFrame !== null) {
+            cancelAnimationFrame(animationFrame);
+            animationFrame = null;
+          }
+        });
+
+        document.addEventListener("mouseover", function (e) {
+          var interactive = e.target.closest("a, button");
+          
+          document.querySelectorAll("a.js-hover, button.js-hover").forEach(function(el) {
+            if (el !== interactive) {
+              el.classList.remove("js-hover");
+            }
+          });
+          
+          if (interactive) {
+            cursor.classList.add("hover");
+            interactive.classList.add("js-hover");
+          }
+        });
+
+        document.addEventListener("mouseout", function (e) {
+          var leavingInteractive = e.target.closest("a, button");
+          var enteringInteractive = e.relatedTarget && e.relatedTarget.closest
+            ? e.relatedTarget.closest("a, button")
+            : null;
+          if (leavingInteractive && !enteringInteractive) {
+            cursor.classList.remove("hover");
+            leavingInteractive.classList.remove("js-hover");
+          }
+        });
+
+        document.addEventListener("click", function (e) {
+          if (e.target.closest("a, button")) {
+            setTimeout(function() {
+              var elementUnderCursor = document.elementFromPoint(mouseX, mouseY);
+              var interactiveUnderCursor = elementUnderCursor ? elementUnderCursor.closest("a, button") : null;
+              
+              document.querySelectorAll("a.js-hover, button.js-hover").forEach(function(el) {
+                el.classList.remove("js-hover");
+              });
+              
+              if (interactiveUnderCursor) {
+                cursor.classList.add("hover");
+                interactiveUnderCursor.classList.add("js-hover");
+              } else {
+                cursor.classList.remove("hover");
+              }
+            }, 50);
+          }
+        });
+
+        document.addEventListener("scroll", function () {
+          setTimeout(function() {
+            var elementUnderCursor = document.elementFromPoint(mouseX, mouseY);
+            var interactiveUnderCursor = elementUnderCursor ? elementUnderCursor.closest("a, button") : null;
+            
+            document.querySelectorAll("a.js-hover, button.js-hover").forEach(function(el) {
+              el.classList.remove("js-hover");
+            });
+            
+            if (interactiveUnderCursor) {
+              cursor.classList.add("hover");
+              interactiveUnderCursor.classList.add("js-hover");
+            } else {
+              cursor.classList.remove("hover");
+            }
+          }, 50);
+        }, { passive: true });
+
+        function animateCursor() {
+          var dx = mouseX - cursorX;
+          var dy = mouseY - cursorY;
+          if (Math.abs(dx) < 0.1 && Math.abs(dy) < 0.1) {
+            cursorX = mouseX;
+            cursorY = mouseY;
+            cursor.style.left = cursorX + "px";
+            cursor.style.top = cursorY + "px";
+            animationFrame = null;
+            return;
+          }
+          cursorX += dx * 0.12;
+          cursorY += dy * 0.12;
+          cursor.style.left = cursorX + "px";
+          cursor.style.top = cursorY + "px";
+          animationFrame = requestAnimationFrame(animateCursor);
+        }
+      })();
+    }
+
+    var INITIAL_POSTS_COUNT = 3;
+    var allPosts = [];
+
+    function loadPosts() {
+      var postsDir = "posts/";
+      var postFiles = ["post.html"];
+
+      var promises = postFiles.map(function(filename) {
+        return fetch(postsDir + filename)
+          .then(function(response) {
+            if (!response.ok) throw new Error("Failed to load " + filename);
+            return response.text();
+          })
+          .then(function(html) {
+            var parser = new DOMParser();
+            var doc = parser.parseFromString(html, "text/html");
+            
+            var title = doc.querySelector('meta[name="post-title"]');
+            var description = doc.querySelector('meta[name="post-description"]');
+            var date = doc.querySelector('meta[name="post-date"]');
+
+            if (title && description && date) {
+              return {
+                title: title.getAttribute("content"),
+                description: description.getAttribute("content"),
+                date: date.getAttribute("content"),
+                url: postsDir + filename
+              };
+            }
+            return null;
+          })
+          .catch(function(error) {
+            console.error("Error loading post:", filename, error);
+            return null;
+          });
+      });
+
+      Promise.all(promises).then(function(posts) {
+        allPosts = posts.filter(function(post) { return post !== null; });
+        renderPosts();
+      });
+    }
+
+    function renderPosts() {
+      var container = document.getElementById("posts-container");
+      if (!container) return;
+
+      if (allPosts.length === 0) {
+        document.getElementById("posts").classList.add("hidden");
+        var postsNavLink = document.querySelector('.nav a[href="#posts"]');
+        if (postsNavLink) {
+          postsNavLink.classList.add("hidden");
+        }
+        return;
+      }
+
+      document.getElementById("posts").classList.remove("hidden");
+      var postsNavLink = document.querySelector('.nav a[href="#posts"]');
+      if (postsNavLink) {
+        postsNavLink.classList.remove("hidden");
+      }
+
+      container.innerHTML = "";
+
+      allPosts.forEach(function(post, index) {
+        var postEl = document.createElement("a");
+        postEl.className = "post";
+        if (index >= INITIAL_POSTS_COUNT) {
+          postEl.classList.add("hidden");
+        }
+        postEl.href = post.url;
+
+        var contentDiv = document.createElement("div");
+        
+        var titleDiv = document.createElement("div");
+        titleDiv.className = "post-title";
+        titleDiv.textContent = post.title;
+        
+        var descDiv = document.createElement("div");
+        descDiv.className = "post-desc";
+        descDiv.textContent = post.description;
+        
+        contentDiv.appendChild(titleDiv);
+        contentDiv.appendChild(descDiv);
+
+        var dateDiv = document.createElement("div");
+        dateDiv.className = "post-date";
+        dateDiv.textContent = post.date;
+
+        var arrowDiv = document.createElement("div");
+        arrowDiv.className = "post-arrow";
+        arrowDiv.setAttribute("aria-hidden", "true");
+        arrowDiv.textContent = "→";
+
+        postEl.appendChild(contentDiv);
+        postEl.appendChild(dateDiv);
+        postEl.appendChild(arrowDiv);
+
+        container.appendChild(postEl);
+      });
+
+      if (allPosts.length > INITIAL_POSTS_COUNT) {
+        var seeMoreBtn = document.createElement("button");
+        seeMoreBtn.className = "see-more-btn";
+        seeMoreBtn.textContent = "See more →";
+        seeMoreBtn.onclick = function() {
+          var hiddenPosts = container.querySelectorAll(".post.hidden");
+          hiddenPosts.forEach(function(post) {
+            post.classList.remove("hidden");
+          });
+          seeMoreBtn.classList.add("hidden");
+        };
+        container.appendChild(seeMoreBtn);
+      }
+    }
+
+    loadPosts();
+
+    document.querySelectorAll('.section-title').forEach(function(title) {
+      title.addEventListener('mousemove', function(e) {
+        var rect = title.getBoundingClientRect();
+        var x = ((e.clientX - rect.left) / rect.width) * 100;
+        var y = ((e.clientY - rect.top) / rect.height) * 100;
+        title.style.setProperty('--mouse-x', x + '%');
+        title.style.setProperty('--mouse-y', y + '%');
+      });
+    });
+  </script>
+</body>
+</html>
